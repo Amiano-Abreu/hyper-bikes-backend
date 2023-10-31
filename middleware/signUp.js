@@ -21,10 +21,9 @@ const signup = async (req, res, next) => {
         if(!doc.empty) {
             return res.status(403).json({
                 status: "error",
-                error: [{
-                    path: "body.email",
-                    message: "This email already exists"
-                }]
+                error: {
+                    email: "This email already exists"
+                }
             });
         } else {
             const data = await firebaseApp
