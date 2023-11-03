@@ -32,12 +32,18 @@ const {verifySession} = require('../middleware/fbAuth');
 
 const router = express.Router();
 
-const csrfMiddleware = csrf({ cookie: {
-    httpOnly: true
-} });
+const expiresIn = 60 * 60 * 24 * 3 * 1000;
 
-router.post('/logout', clearSession);
+const csrfMiddleware = csrf({ 
+    cookie: {
+        httpOnly: true,
+        maxAge: expiresIn
+    }
+});
 
+
+router.post('/signup', validateSchema(signUpSchema), signUp, createSession);
+router.post('/login', validateSchema(loginSchema), login, createSession);
 
 router.use(csrfMiddleware);
 
@@ -45,8 +51,7 @@ router.get('/csrf', (req, res) => {
     return res.status(200).json({ csrfToken: req.csrfToken() });
 });
 
-router.post('/signup', validateSchema(signUpSchema), signUp, createSession);
-router.post('/login', validateSchema(loginSchema), login, createSession);
+router.post('/logout', clearSession);
 
 router.get('/account', verifySession, getAccountSummary);
 router.get('/reviews', verifySession, getAllReviews);

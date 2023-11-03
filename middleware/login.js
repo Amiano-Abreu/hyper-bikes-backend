@@ -27,7 +27,9 @@ const login = async (req, res, next) => {
         if (e.code === 'auth/wrong-password') {
             return res.status(401).json({ 
                 status: 'error',
-                message: "Wrong password, please try again"
+                error: {
+                    password: "Wrong password, please try again"
+                }
             });
 
         } else if (e.code === 'auth/user-not-found') {

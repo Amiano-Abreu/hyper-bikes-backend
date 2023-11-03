@@ -7,6 +7,45 @@ const NewsPreview = require('../models/newsPreview');
 
 const firestore = firebaseApp.firestore();
 
+const getSingleBikeSummary = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const bike = await firestore.collection('Bikes').doc(id);
+        const data = await bike.get();
+        
+        if(!data.exists) {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'Bike with the given ID not found'
+            });
+        } else {
+            // console.log(data.data())
+
+            const bikeData = new BikesPreview(
+                data.id,
+                data.data().brand,
+                data.data().category,
+                data.data().displacement,
+                data.data().images,
+                data.data().kerbWeight,
+                data.data().model,
+                data.data().power,
+                data.data().price
+            );
+
+            return res.status(200).json({
+                status: 'Success',
+                data: bikeData
+            })
+        }
+    } catch (error) {
+        return res.status(400).json({
+            status: 'Error',
+            message: error.message
+        });
+    }
+}
 // verified
 const getBikes = async (req, res) => {
     const { limit } = req.query;
@@ -217,7 +256,7 @@ const getBikeID = async (req, res) => {
 
 // verified
 const getBikesBrand = async (req, res) => {
-    const brand = req.query.brand;
+    const { brand } = req.params;
 
     const bikesRef = firestore
                         .collection('Bikes')
@@ -266,7 +305,7 @@ const getBikesBrand = async (req, res) => {
 
 // verified
 const getBikesCategory = async (req, res) => {
-    const category = req.query.category;
+    const { category } = req.params;
 
     const bikesRef = firestore
                         .collection('Bikes')
@@ -445,5 +484,6 @@ module.exports = {
     getBikesBrand,
     getBikesCategory,
     getBikesDisplacement,
-    getBikesPrice
+    getBikesPrice,
+    getSingleBikeSummary
 }

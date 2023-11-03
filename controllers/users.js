@@ -157,24 +157,25 @@ const getUserDetails = async (req, res) => {
 }
 
 const clearSession = async (req, res) => {
-    const sessionCookie = req.cookies.session || '';
-    res.clearCookie("session");
+    const sessionCookie = req.cookies.session;
     try {
         console.log('clearSession sesh ', sessionCookie)
         const userData = await admin
-                                .auth()
-                                .verifySessionCookie(sessionCookie, true);
-
+        .auth()
+        .verifySessionCookie(sessionCookie, true);
+        
         console.log('clearSession user ', userData)
-
-        await admin.revokeRefreshTokens(userData.sub);
+        
+        await admin.auth().revokeRefreshTokens(userData.sub);
+        
+        res.clearCookie("session");
 
         return res.status(200).json({
             status: 'success',
             message: 'Succesfully logged out user !'
         })
     } catch (err) {
-        console.log(err);
+        console.log(err.message);
         return res.status(400).json({
             status: 'error',
             message: 'Failed sign out !'

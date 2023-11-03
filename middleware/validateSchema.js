@@ -11,6 +11,7 @@ const validateSchema = (schema) => async (req, res, next) => {
 
       req.body = data.body;
       req.query = data.query;
+      req.params = data.params
       return next();
 
     } catch (err) {
