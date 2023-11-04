@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/api', (req, res) => {
     return res.status(200).json({
         status: 'success',
-        message: 'Server v2023.10.29 is ok !'
+        message: 'Server v2023.11.03 is ok !'
     })
 })
 app.use('/api', newsRoute.routes);

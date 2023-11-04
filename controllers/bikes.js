@@ -7,6 +7,7 @@ const NewsPreview = require('../models/newsPreview');
 
 const firestore = firebaseApp.firestore();
 
+// verified
 const getSingleBikeSummary = async (req, res) => {
     const { id } = req.params;
 
@@ -413,21 +414,18 @@ const getBikesDisplacement = async (req, res) => {
 
 // verified
 const getBikesPrice = async (req, res) => {
-    const underPrice = req.query.under;
-    const abovePrice = req.query.above;
+    const { under, above } = req.query;
 
     let bikesRef;
-    let price;
-    if(underPrice > 0 && abovePrice === 0){
-        price = true;
+    if(under){
         bikesRef = firestore
                         .collection('Bikes')
-                        .where("price", "<=", underPrice);
-    }else if(abovePrice > 0 && underPrice === 0){
-        price = false;
+                        .where("price", "<", under);
+    }
+    else if(above){
         bikesRef = firestore
                         .collection('Bikes')
-                        .where("price", ">=", abovePrice);
+                        .where("price", ">", above);
     } else {
         return res.status(404).json({
             status: 'error',
@@ -460,7 +458,7 @@ const getBikesPrice = async (req, res) => {
         } else {
             return res.status(404).json({
                         status: 'error',
-                        message: `Bikes ${price ? `under ${underPrice}`: `above ${abovePrice}`} price are not available`
+                        message: `Bikes ${under ? `under ${under}`: `above ${above}`} price are not available`
                     })
         }
 

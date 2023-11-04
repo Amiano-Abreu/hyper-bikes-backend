@@ -16,7 +16,7 @@ const getNews = async (req, res) => {
         const data = await news.get();
         const newsArray = [];
         if(data.empty) {
-            res.status(404).json({
+            return res.status(404).json({
                 status: 'Error',
                 message: 'No data found'
             });
@@ -34,13 +34,13 @@ const getNews = async (req, res) => {
                 newsArray.push(news);
             })
 
-            res.status(200).json({
+            return res.status(200).json({
                 status: 'Success',
                 data: newsArray
             })
         }
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             status: 'Error',
             message: error.message
         });
