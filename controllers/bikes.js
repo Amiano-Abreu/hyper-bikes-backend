@@ -17,7 +17,7 @@ const getSingleBikeSummary = async (req, res) => {
         
         if(!data.exists) {
             return res.status(404).json({
-                status: 'Error',
+                status: 'ERROR',
                 message: 'Bike with the given ID not found'
             });
         } else {
@@ -36,13 +36,13 @@ const getSingleBikeSummary = async (req, res) => {
             );
 
             return res.status(200).json({
-                status: 'Success',
+                status: 'SUCCESS',
                 data: bikeData
             })
         }
     } catch (error) {
         return res.status(400).json({
-            status: 'Error',
+            status: 'ERROR',
             message: error.message
         });
     }
@@ -61,9 +61,9 @@ const getBikes = async (req, res) => {
         const data = await bikes.get();
         const bikesArray = [];
         if(data.empty) {
-            res.status(404).json({
-                status: 'Error',
-                message: 'No data found'
+            return res.status(200).json({
+                status: 'SUCCESS',
+                data: []
             });
         } else {
             data.forEach(doc => {
@@ -82,14 +82,14 @@ const getBikes = async (req, res) => {
                 bikesArray.push(bike);
             })
 
-            res.status(200).json({
-                status: 'Success',
+            return res.status(200).json({
+                status: 'SUCCESS',
                 data: bikesArray
             })
         }
     } catch (error) {
-        res.status(400).json({
-            status: 'Error',
+        return res.status(400).json({
+            status: 'ERROR',
             message: error.message
         });
     }
@@ -109,8 +109,8 @@ const getBikeID = async (req, res) => {
         const newsData = await newsRef.get();
 
         if(!data.exists) {
-            res.status(404).json({
-                status: 'Error',
+            return res.status(404).json({
+                status: 'ERROR',
                 message: 'Bike with the given ID not found'
             });
         }else {
@@ -239,16 +239,16 @@ const getBikeID = async (req, res) => {
                 })
             }
 
-            res.status(200).json({
-                status: 'Success',
+            return res.status(200).json({
+                status: 'SUCCESS',
                 data: bikeDetails,
                 review: reviews,
                 news: newsArray
             });
         }
     } catch (error) {
-        res.status(400).json({
-            status: 'Error',
+        return res.status(400).json({
+            status: 'ERROR',
             message: error.message,
             ...error
         })
@@ -286,19 +286,19 @@ const getBikesBrand = async (req, res) => {
             })
 
         } else {
-            return res.status(404).json({
-                        status: 'error',
-                        message: `${brand} bikes not available`
+            return res.status(200).json({
+                        status: 'SUCCESS',
+                        data: []
                     });
         }
 
         return res.status(200).json({
-            status: 'success',
+            status: 'SUCCESS',
             data: bikes
         })
     } catch (err) {
         return res.status(500).json({
-                    status: 'error',
+                    status: 'ERROR',
                     message: 'Server error, please try again'
                 })
     }
@@ -335,19 +335,19 @@ const getBikesCategory = async (req, res) => {
             })
 
         } else {
-            return res.status(404).json({
-                        status: 'error',
-                        message: `${category} bikes not available`
+            return res.status(200).json({
+                        status: 'Success',
+                        data: []
                     })
         }
 
         return res.status(200).json({
-            status: 'success',
+            status: 'SUCCESS',
             data: bikes
         })
     } catch (err) {
         return res.status(500).json({
-                    status: 'error',
+                    status: 'ERROR',
                     message: 'Server error, please try again'
                 })
     }
@@ -394,19 +394,19 @@ const getBikesDisplacement = async (req, res) => {
             })
 
         } else {
-            return res.status(404).json({
-                        status: 'error',
-                        message: `${start}cc-${end}cc bikes are not available`
+            return res.status(200).json({
+                        status: 'SUCCESS',
+                        data: []
                     })
         }
 
         return res.status(200).json({
-                    status: 'success',
+                    status: 'SUCCESS',
                     data: bikes
                 })
     } catch (err) {
         return res.status(500).json({
-                    status: 'error',
+                    status: 'ERROR',
                     message: 'Server error, please try again'
                 })
     }
@@ -428,7 +428,7 @@ const getBikesPrice = async (req, res) => {
                         .where("price", ">", above);
     } else {
         return res.status(404).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Please check query params'
         });
     }
@@ -456,20 +456,20 @@ const getBikesPrice = async (req, res) => {
             })
 
         } else {
-            return res.status(404).json({
-                        status: 'error',
-                        message: `Bikes ${under ? `under ${under}`: `above ${above}`} price are not available`
+            return res.status(200).json({
+                        status: 'SUCCESS',
+                        data: []
                     })
         }
 
         return res.status(200).json({
-                    status: 'success',
+                    status: 'SUCCESS',
                     data: bikes
                 })
 
     } catch (err) {
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }

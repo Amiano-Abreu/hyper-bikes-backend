@@ -17,8 +17,8 @@ const getNews = async (req, res) => {
         const newsArray = [];
         if(data.empty) {
             return res.status(404).json({
-                status: 'Error',
-                message: 'No data found'
+                status: 'SUCCESS',
+                data: newsArray
             });
         } else {
             data.forEach(doc => {
@@ -35,13 +35,13 @@ const getNews = async (req, res) => {
             })
 
             return res.status(200).json({
-                status: 'Success',
+                status: 'SUCCESS',
                 data: newsArray
             })
         }
     } catch (error) {
         return res.status(400).json({
-            status: 'Error',
+            status: 'ERROR',
             message: error.message
         });
     }
@@ -53,19 +53,21 @@ const getNewsID = async (req, res) => {
         const news = await firestore.collection('NewsDetails').doc(newsID);
         const data = await news.get();
         if(!data.exists) {
-            res.status(404).json({
-                status: 'Error',
+            return res.status(404).json({
+                status: 'ERROR',
                 message: 'News with the given ID not found'
             });
         }else {
-            res.status(200).json({
-                status: 'Success',
-                ...data.data()
+            return res.status(200).json({
+                status: 'SUCCESS',
+                data: {
+                    ...data.data()
+                }
             });
         }
     } catch (error) {
-        res.status(400).json({
-            status: 'Error',
+        return res.status(400).json({
+            status: 'ERROR',
             message: error.message
         })
     }

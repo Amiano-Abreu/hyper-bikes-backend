@@ -1,10 +1,7 @@
 const express = require('express');
 const csrf = require('csurf');
 
-const { 
-    //signUp,
-    //login,
-    //logOut,
+const {
     createSession,
     clearSession,
     getAccountSummary,

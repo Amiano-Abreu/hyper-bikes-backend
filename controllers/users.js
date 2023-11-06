@@ -2,109 +2,6 @@ const { firebaseApp, admin } = require('../db');
 
 const firestore = firebaseApp.firestore();
 
-// verified
-const signUp = async (req, res) => {
-    const newUser = {
-      email: req.body.email,
-      password: req.body.password,
-      confirmPassword: req.body.confirmPassword,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      state: req.body.state,
-      country: req.body.country
-    };
-
-    let token, userId;
-
-    try {
-        const doc = await firestore.collection('Users').where("email" , "==" , newUser.email);
-
-        if(doc.exists) {
-            return res.status(403).json({
-                status: "error",
-                error: [{
-                    path: "body.email",
-                    message: "This email already exists"
-                }]
-            });
-        } else {
-            const data = await firebaseApp
-                            .auth()
-                            .createUserWithEmailAndPassword(newUser.email, newUser.password);
-            
-            userId = data.user.uid;
-            const idToken = await data.user.getIdToken();
-            token = idToken;
-            
-            const user = {
-                email: newUser.email,
-                name: `${newUser.firstName} ${newUser.lastName}`,
-                state: newUser.state,
-                country: newUser.country
-            }
-
-            await firestore
-                    .collection('Users')
-                    .doc(userId)
-                    .set(user);
-
-            return res.status(201).json({ 
-                status: 'success',
-                token,
-                user
-            });
-        }
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            status: 'error',
-            message: 'Something went wrong, please try again'
-        })
-    }
-}  
-
-// verified
-const login = async (req, res, next) => {
-    const user = {
-        email: req.body.email,
-        password: req.body.password,
-    };
-
-    try {
-        const data = await firebaseApp
-                        .auth()
-                        .signInWithEmailAndPassword(user.email, user.password);
-        const uid = data.user.uid;
-        const token = await data.user.getIdToken();
-
-        const doc = await firestore.collection('Users').doc(uid).get();
-
-        req.token = String(token);
-        console.log('login: ' , uid);
-        req.user = { uid: uid, ...doc.data() };
-
-        return next();
-
-    } catch (e) {
-        if (e.code === 'auth/wrong-password') {
-            return res.status(401).json({ 
-                status: 'error',
-                message: "Wrong password, please try again"
-            });
-
-        } else if (e.code === 'auth/user-not-found') {
-            return res.status(401).json({ 
-                status: 'error',
-                message: 'User does not exists, please sign up'
-            });
-        }
-        return res.status(500).json({ 
-            status: 'error',
-            message: "Server error, please try again"
-        });
-    }
-}
-
 const createSession = async (req, res) => {
     const idToken = req.token;
 
@@ -179,26 +76,6 @@ const clearSession = async (req, res) => {
         return res.status(400).json({
             status: 'error',
             message: 'Failed sign out !'
-        })
-    }
-}
-
-// verified
-const logOut = async (req, res) => {
-    try {
-        await firebaseApp
-                .auth()
-                .signOut();
-
-        return res.status(200).json({
-            status: 'success',
-            message: 'Successfully logged out'
-        })
-
-    } catch (err) {
-        res.status(500).json({
-            status: 'error',
-            message: 'Server error, please try again'
         })
     }
 }
@@ -650,9 +527,6 @@ const cancelOrder = async (req, res) => {
 }
 
 module.exports = {
-    signUp,
-    login,
-    logOut,
     getAccountSummary,
     getAllReviews,
     getAllOrders,
