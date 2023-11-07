@@ -20,15 +20,17 @@ const validateSchema = (schema) => async (req, res, next) => {
 
       err.inner.map(e => {
         const errObj = {};
-        errObj.path = e.path,
-        errObj.message = e.errors[0];
+        // errObj.path = e.path,
+        // errObj.message = e.errors[0];
+
+        errObj[e.path.split(".")[1]] = e.message.includes(".") ? e.message.split(".")[1] : e.message
 
         errors.push(errObj);
       })
 
       return res.status(403).json({ 
-        status: 'error',
-        errors
+        status: 'ERROR',
+        data: errors
       });
 
     }

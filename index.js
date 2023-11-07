@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/api', (req, res) => {
     return res.status(200).json({
-        status: 'success',
+        status: 'SUCCESS',
         message: 'Server v2023.11.03 is ok !'
     })
 })
@@ -31,7 +31,7 @@ app.use('/api', bikesRoute.routes);
 app.use('/api', usersRoute.routes);
 app.use((req, res) => {
     return res.status(404).json({
-        status: 'error',
+        status: 'ERROR',
         message: 'Invalid api route'
     })
 })

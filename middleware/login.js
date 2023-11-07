@@ -26,20 +26,20 @@ const login = async (req, res, next) => {
     } catch (e) {
         if (e.code === 'auth/wrong-password') {
             return res.status(401).json({ 
-                status: 'error',
-                error: {
+                status: 'ERROR',
+                data: {
                     password: "Wrong password, please try again"
                 }
             });
 
         } else if (e.code === 'auth/user-not-found') {
             return res.status(401).json({ 
-                status: 'error',
+                status: 'ERROR',
                 message: 'User does not exists, please sign up'
             });
         }
         return res.status(500).json({ 
-            status: 'error',
+            status: 'ERROR',
             message: "Server error, please try again"
         });
     }

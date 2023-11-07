@@ -20,7 +20,7 @@ const fbAuth = async (req, res, next) => {
       } catch (e) {
         if(e.code === "auth/id-token-expired") {
           return res.status(403).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Token expired, please login'
           })
         }
@@ -31,7 +31,7 @@ const fbAuth = async (req, res, next) => {
 
     } else {
         return res.status(403).json({ 
-            status: 'error',
+            status: 'ERROR',
             message: 'Unauthorized access'
         });
     }
@@ -52,7 +52,7 @@ const verifySession = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     return res.status(401).json({
-      status: 'error',
+      status: 'ERROR',
       message: 'Unauthorized access'
     })
   }

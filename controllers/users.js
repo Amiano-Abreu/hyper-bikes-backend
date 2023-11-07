@@ -23,14 +23,14 @@ const createSession = async (req, res) => {
             console.log('req.user ', req.user)
             console.log('req.token idToken', req.token)
             return res.status(200).json({
-                status: "success",
+                status: "SUCCESS",
                 user: req.user
             });
     
         } catch (err) {
             console.log(err);
             return res.status(401).json({
-                status: 'error',
+                status: 'ERROR',
                 message: 'Unauthorized access'
             })
         }
@@ -41,13 +41,13 @@ const getUserDetails = async (req, res) => {
     try {
         const doc = await firestore.collection('Users').doc(uid).get();
         return res.status(200).json({
-            status: 'success',
+            status: 'SUCCESS',
             data: { uid: uid , ...doc.data() }
         })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ 
-            status: 'error',
+            status: 'ERROR',
             message: "Server error, please try again"
         });
     }
@@ -68,13 +68,13 @@ const clearSession = async (req, res) => {
         res.clearCookie("session");
 
         return res.status(200).json({
-            status: 'success',
+            status: 'SUCCESS',
             message: 'Succesfully logged out user !'
         })
     } catch (err) {
         console.log(err.message);
         return res.status(400).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Failed sign out !'
         })
     }
@@ -122,14 +122,14 @@ const getAccountSummary = async (req, res) => {
         }
 
         return res.status(200).json({
-            status: 'success',
+            status: 'SUCCESS',
             reviews: reviewArray,
             orders: orderArray
         })
 
     } catch (err) {
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }
@@ -158,12 +158,12 @@ const getAllReviews = async (req, res) => {
         }
 
         return res.status(200).json({
-            status: 'success',
-            reviews: reviewsArray
+            status: 'SUCCESS',
+            data: reviewsArray
         })
     } catch (err) {
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }
@@ -192,12 +192,12 @@ const getAllOrders = async (req, res) => {
         }
 
         return res.status(200).json({
-            status: 'success',
-            orders: ordersArray
+            status: 'SUCCESS',
+            data: ordersArray
         })
     } catch (err) {
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }
@@ -269,13 +269,13 @@ const addReview = async (req, res) => {
                     })
 
             return res.status(200).json({
-                status: 'success',
+                status: 'SUCCESS',
                 message: 'Review added successfully'
             })
 
         } else {
             return res.status(403).json({
-                        status: 'error',
+                        status: 'ERROR',
                         message: 'Bike is already reviewed by you'
                     });
                 
@@ -283,7 +283,7 @@ const addReview = async (req, res) => {
     } catch (err) {
         console.log(err)
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }
@@ -351,13 +351,13 @@ const editReview = async (req, res) => {
                     })
 
             return res.status(200).json({
-                status: 'success',
+                status: 'SUCCESS',
                 message: 'Review edited successfully'
             })
         
         } else {
             return res.status(404).json({
-                        status: 'error',
+                        status: 'ERROR',
                         message: 'Review does not exists'
                     });
                 
@@ -365,7 +365,7 @@ const editReview = async (req, res) => {
     } catch (err) {
         console.log(err)
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }
@@ -415,19 +415,19 @@ const deleteReview = async (req, res) => {
                     .delete();
 
             return res.status(200).json({
-                status: 'success',
+                status: 'SUCCESS',
                 message: 'Successfully deleted review'
             })
         } else {
             return res.status(404).json({
-                status: 'error',
+                status: 'ERROR',
                 message: 'Review does not exists'
             });
         }
     } catch (err) {
         console.log(err)
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }
@@ -475,13 +475,13 @@ const addOrder = async (req, res) => {
                 .set(orderDetails);
 
         return res.status(200).json({
-            status: 'success',
+            status: 'SUCCESS',
             message: 'Order is successfully placed'
         })
     } catch (err) {
         console.log(err);
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }
@@ -509,18 +509,18 @@ const cancelOrder = async (req, res) => {
                     .delete();
         } else {
             return res.status(404).json({
-                status: 'error',
+                status: 'ERROR',
                 message: 'Order with given ID does not exists'
             })
         }
 
         return res.status(200).json({
-            status: 'success',
+            status: 'SUCCESS',
             message: 'Order successfully cancelled'
         });
     } catch (err) {
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Server error, please try again'
         })
     }

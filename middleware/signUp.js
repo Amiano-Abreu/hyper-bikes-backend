@@ -20,9 +20,9 @@ const signup = async (req, res, next) => {
 
         if(!doc.empty) {
             return res.status(403).json({
-                status: "error",
-                error: {
-                    email: "This email already exists"
+                status: "ERROR",
+                data: {
+                    email: "This email is already in use"
                 }
             });
         } else {
@@ -54,7 +54,7 @@ const signup = async (req, res, next) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            status: 'error',
+            status: 'ERROR',
             message: 'Something went wrong, please try again'
         })
     }
