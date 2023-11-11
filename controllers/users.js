@@ -2,6 +2,40 @@ const { firebaseApp, admin } = require('../db');
 
 const firestore = firebaseApp.firestore();
 
+const getCartItems = async (req, res) => {
+    const uid = req.user.user_id;
+
+    try {
+        const doc = await firestore.collection('Cart').where("userID", "==", uid).limit(1).get()
+
+        let data;
+        if (!doc.empty) {
+            doc.forEach(
+                docItem => {
+                    data = docItem.data().cartItems;
+                }
+            )
+
+            return res.status(200).json({
+                status: "SUCCESS",
+                data
+            })
+        } else {
+            data = [];
+
+            return res.status(200).json({
+                status: "SUCCESS",
+                data
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: 'ERROR',
+            message: 'Server error, please try again'
+        })
+    }
+}
+
 const createSession = async (req, res) => {
     const idToken = req.token;
 
@@ -527,6 +561,7 @@ const cancelOrder = async (req, res) => {
 }
 
 module.exports = {
+    getCartItems,
     getAccountSummary,
     getAllReviews,
     getAllOrders,

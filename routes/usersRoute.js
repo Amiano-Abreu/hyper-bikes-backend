@@ -12,7 +12,8 @@ const {
     deleteReview,
     addOrder,
     cancelOrder,
-    getUserDetails
+    getUserDetails,
+    getCartItems
 } = require('../controllers/users');
 
 const signUpSchema = require('../schema/signUpSchema');
@@ -55,6 +56,8 @@ router.get('/reviews', verifySession, getAllReviews);
 router.get('/orders', verifySession, getAllOrders);
 
 router.get('/user', verifySession, getUserDetails);
+
+router.post('/getcart', verifySession, getCartItems);
 
 router.post('/review', verifySession, validateSchema(reviewSchema), addReview);
 router.patch('/review', verifySession, validateSchema(reviewSchema), editReview);
