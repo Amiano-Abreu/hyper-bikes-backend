@@ -32,7 +32,14 @@ const login = async (req, res, next) => {
                 }
             });
 
-        } else if (e.code === 'auth/user-not-found') {
+        } 
+        else if (e.code === 'auth/too-many-requests') {
+            return res.status(401).json({
+                status: 'ERROR',
+                message: e.message
+            })
+        }
+        else if (e.code === 'auth/user-not-found') {
             return res.status(401).json({ 
                 status: 'ERROR',
                 message: 'User does not exists, please sign up'
