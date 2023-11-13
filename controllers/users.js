@@ -2,6 +2,7 @@ const { firebaseApp, admin } = require('../db');
 
 const firestore = firebaseApp.firestore();
 
+// verified
 const getCartItems = async (req, res) => {
     const uid = req.user.user_id;
 
@@ -36,6 +37,199 @@ const getCartItems = async (req, res) => {
     }
 }
 
+// verified
+const addToCart = async (req, res) => {
+    const uid = req.user.user_id;
+    const cartItem = {};
+
+    cartItem.alt = req.body.alt;
+    cartItem.bikeID = req.body.bikeID;
+    cartItem.brand = req.body.brand;
+    cartItem.model = req.body.model;
+    cartItem.price = req.body.price;
+    cartItem.src = req.body.src;
+    cartItem.quantity = 1;
+
+    try {
+        const doc = await firestore.collection('Cart').where("userID", "==", uid).limit(1).get()
+
+        let data;
+        if (!doc.empty) {
+            let docID;
+            doc.forEach(
+                docItem => {
+                    docID = docItem.id;
+                    data = docItem.data().cartItems;
+                }
+            )
+
+            const foundItem = data.find( obj => obj.bikeID === cartItem.bikeID );
+
+            if (foundItem) {
+                foundItem.quantity += 1;
+
+                let newData = data.filter( obj => obj.bikeID !== cartItem.bikeID );
+                newData.push(foundItem);
+
+                data = newData;
+            }
+            else {
+                data.push(cartItem)
+            }
+            
+            await firestore
+                    .collection('Cart')
+                    .doc(docID)
+                    .update({ cartItems: data })
+
+            return res.status(200).json({
+                status: "SUCCESS",
+                data
+            })
+        } else {
+            data = [cartItem];
+
+            await firestore
+                    .collection('Cart')
+                    .add({ cartItems: data, userID: uid })
+
+            return res.status(201).json({
+                status: "SUCCESS",
+                data
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: 'ERROR',
+            message: 'Server error, please try again'
+        })
+    }
+}
+
+// verified
+const removeFromCart = async (req, res) => {
+    const uid = req.user.user_id;
+
+    const bikeID = req.body.bikeID;
+    const removeItem = req.body.removeItem;
+
+    try {
+        const doc = await firestore.collection('Cart').where("userID", "==", uid).limit(1).get()
+
+        let data;
+        if (!doc.empty) {
+            let docID;
+            doc.forEach(
+                docItem => {
+                    docID = docItem.id;
+                    data = docItem.data().cartItems;
+                }
+            )
+            
+            const foundItem = data.find( obj => obj.bikeID === bikeID );
+
+            if (foundItem) {
+
+                if (removeItem === 'true') {
+                    data = data.filter( obj => obj.bikeID !== bikeID );
+                } else {
+
+                    if (foundItem.quantity > 1) {
+                        foundItem.quantity -= 1;
+    
+                        const newArr = data.filter( obj => obj.bikeID !== bikeID );
+                        newArr.push(foundItem);
+    
+                        data = newArr;
+                    } else {
+                        data = data.filter( obj => obj.bikeID !== bikeID )
+                    }
+                }
+
+                if (data.length > 0) {
+                    await firestore
+                            .collection('Cart')
+                            .doc(docID)
+                            .update({ cartItems: data });
+
+                    return res.status(200).json({
+                        status: 'SUCCESS',
+                        data
+                    })
+                }
+                else {
+                    await firestore
+                            .collection('Cart')
+                            .doc(docID)
+                            .delete();
+
+                    return res.status(200).json({
+                        status: 'SUCCESS',
+                        data
+                    })
+                }
+            } else {
+                return res.status(404).json({
+                    status: 'ERROR',
+                    message: `Cart item with bike ID ${bikeID} not found`
+                })
+            }
+           
+        } else {
+            return res.status(404).json({
+                status: 'ERROR',
+                message: `Cart of user id ${uid} not found`
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: 'ERROR',
+            message: 'Server error, please try again'
+        })
+    }
+}
+
+// verified
+const removeAllCart = async (req, res) => {
+    const uid = req.user.user_id;
+
+    try {
+        const doc = await firestore.collection('Cart').where("userID", "==", uid).limit(1).get()
+
+        let data = [];
+        if (!doc.empty) {
+            let docID;
+            doc.forEach(
+                docItem => {
+                    docID = docItem.id;
+                }
+            )
+
+            await firestore
+                    .collection('Cart')
+                    .doc(docID)
+                    .delete();
+
+            return res.status(200).json({
+                status: 'SUCCESS',
+                data
+            })
+           
+        } else {
+            return res.status(404).json({
+                status: 'ERROR',
+                message: `Cart of user id ${uid} not found`
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: 'ERROR',
+            message: 'Server error, please try again'
+        })
+    }
+}
+
+// verified
 const createSession = async (req, res) => {
     const idToken = req.token;
 
@@ -70,6 +264,7 @@ const createSession = async (req, res) => {
         }
 }
 
+// verified
 const getUserDetails = async (req, res) => {
     const uid = req.user.user_id;
     try {
@@ -87,6 +282,7 @@ const getUserDetails = async (req, res) => {
     }
 }
 
+// verified
 const clearSession = async (req, res) => {
     const sessionCookie = req.cookies.session;
     try {
@@ -561,6 +757,9 @@ const cancelOrder = async (req, res) => {
 }
 
 module.exports = {
+    removeAllCart,
+    removeFromCart,
+    addToCart,
     getCartItems,
     getAccountSummary,
     getAllReviews,

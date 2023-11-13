@@ -13,7 +13,10 @@ const {
     addOrder,
     cancelOrder,
     getUserDetails,
-    getCartItems
+    getCartItems,
+    addToCart,
+    removeFromCart,
+    removeAllCart
 } = require('../controllers/users');
 
 const signUpSchema = require('../schema/signUpSchema');
@@ -21,6 +24,8 @@ const loginSchema = require('../schema/loginSchema');
 const reviewSchema = require('../schema/reviewSchema');
 const orderSchema = require('../schema/orderSchema');
 const cancelOrderSchema = require('../schema/cancelOrderSchema');
+const addToCartSchema = require('../schema/addToCartSchema');
+const removeFromCartSchema = require('../schema/removeFromCartSchema');
 
 const validateSchema = require('../middleware/validateSchema');
 //const fbAuth = require('../middleware/fbAuth');
@@ -58,6 +63,9 @@ router.get('/orders', verifySession, getAllOrders);
 router.get('/user', verifySession, getUserDetails);
 
 router.post('/getcart', verifySession, getCartItems);
+router.post('/addtocart', verifySession, validateSchema(addToCartSchema), addToCart);
+router.post('/removefromcart', verifySession, validateSchema(removeFromCartSchema), removeFromCart);
+router.post('/removeallcart', verifySession, removeAllCart);
 
 router.post('/review', verifySession, validateSchema(reviewSchema), addReview);
 router.patch('/review', verifySession, validateSchema(reviewSchema), editReview);
