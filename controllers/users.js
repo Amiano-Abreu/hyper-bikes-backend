@@ -406,7 +406,7 @@ const getAllOrders = async (req, res) => {
 
     try {
         const orderDocs = await firestore
-                                    .collection('Orders')
+                                    .collection('OrderDetails')
                                     .where("userID", "==", uid)
                                     .get();
 
@@ -673,15 +673,15 @@ const addOrder = async (req, res) => {
         total: req.body.total
     }
 
-    const orders = {
-        userID: uid
-    };
-    let products = [];
+    // const orders = {
+    //     userID: uid
+    // };
+    // let products = [];
 
     try {
-        orderDetails.products.forEach(product => {
-            products.push(product.bikeModel);
-        })
+        // orderDetails.products.forEach(product => {
+        //     products.push(product.bikeModel);
+        // })
 
         const dateNow = admin.firestore.Timestamp.now().toDate();
         let deliveryDate = admin.firestore.Timestamp.now().toDate();
@@ -691,22 +691,22 @@ const addOrder = async (req, res) => {
         orderDetails.deliveryDate = deliveryDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
         orderDetails.deliveryStatus = 'ordered';
 
-        orders.products = products;
-        orders.deliveryDate = deliveryDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
-        orders.deliveryStatus = 'ordered';
+        // orders.products = products;
+        // orders.deliveryDate = deliveryDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+        // orders.deliveryStatus = 'ordered';
 
-        orderDoc = await firestore
-                            .collection('Orders')
-                            .add(orders);
-        console.log(orderDoc)
+        // orderDoc = await firestore
+        //                     .collection('Orders')
+        //                     .add(orders);
+        // console.log(orderDoc)
         await firestore
                 .collection('OrderDetails')
-                .doc(orderDoc.id)
-                .set(orderDetails);
+                // .doc(orderDoc.id)
+                .add(orderDetails);
 
         return res.status(200).json({
             status: 'SUCCESS',
-            message: 'Order is successfully placed'
+            message: 'Order is successfully placed !'
         })
     } catch (err) {
         console.log(err);
@@ -721,22 +721,18 @@ const addOrder = async (req, res) => {
 const cancelOrder = async (req, res) => {
     const orderID = req.body.orderID;
 
-    const orderDoc = firestore
-                        .collection('Orders')
-                        .doc(orderID);
-
     const detailsDoc = firestore
                             .collection('OrderDetails')
                             .doc(orderID)
 
     try {
-        const order = await orderDoc.get();
+        const order = await detailsDoc.get();
         if (order.exists) {
-            await orderDoc
-                .delete();
 
             await detailsDoc
-                    .delete();
+                    .update({
+                        deliveryStatus: 'cancelled'
+                    });
         } else {
             return res.status(404).json({
                 status: 'ERROR',

@@ -56,22 +56,22 @@ router.get('/csrf', (req, res) => {
 
 router.post('/logout', clearSession);
 
-router.get('/account', verifySession, getAccountSummary);
-router.get('/reviews', verifySession, getAllReviews);
-router.get('/orders', verifySession, getAllOrders);
-
 router.get('/user', verifySession, getUserDetails);
+router.get('/account', verifySession, getAccountSummary);
 
-router.post('/getcart', verifySession, getCartItems);
+router.get('/cart', verifySession, getCartItems);
 router.post('/addtocart', verifySession, validateSchema(addToCartSchema), addToCart);
 router.post('/removefromcart', verifySession, validateSchema(removeFromCartSchema), removeFromCart);
 router.post('/removeallcart', verifySession, removeAllCart);
 
+router.get('/reviews', verifySession, getAllReviews);
 router.post('/review', verifySession, validateSchema(reviewSchema), addReview);
 router.patch('/review', verifySession, validateSchema(reviewSchema), editReview);
 router.delete('/review', verifySession, deleteReview);
-router.post('/order', verifySession, validateSchema(orderSchema), addOrder);
-router.delete('/order', verifySession, validateSchema(cancelOrderSchema), cancelOrder);
+
+router.post('/orders', verifySession, getAllOrders);
+router.post('/addorder', verifySession, validateSchema(orderSchema), addOrder);
+router.post('/cancelorder', verifySession, validateSchema(cancelOrderSchema), cancelOrder);
 
 module.exports = {
     routes: router
