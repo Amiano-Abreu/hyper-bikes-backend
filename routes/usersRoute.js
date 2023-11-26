@@ -22,6 +22,7 @@ const {
 const signUpSchema = require('../schema/signUpSchema');
 const loginSchema = require('../schema/loginSchema');
 const reviewSchema = require('../schema/reviewSchema');
+const deleteReviewSchema = require('../schema/deleteReviewSchema');
 const orderSchema = require('../schema/orderSchema');
 const cancelOrderSchema = require('../schema/cancelOrderSchema');
 const addToCartSchema = require('../schema/addToCartSchema');
@@ -66,8 +67,8 @@ router.post('/removeallcart', verifySession, removeAllCart);
 
 router.get('/reviews', verifySession, getAllReviews);
 router.post('/review', verifySession, validateSchema(reviewSchema), addReview);
-router.patch('/review', verifySession, validateSchema(reviewSchema), editReview);
-router.delete('/review', verifySession, deleteReview);
+router.post('/editreview', verifySession, validateSchema(reviewSchema), editReview);
+router.post('/deletereview', verifySession, validateSchema(deleteReviewSchema), deleteReview);
 
 router.post('/orders', verifySession, getAllOrders);
 router.post('/addorder', verifySession, validateSchema(orderSchema), addOrder);

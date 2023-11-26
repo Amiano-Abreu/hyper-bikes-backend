@@ -125,7 +125,7 @@ const getBikeID = async (req, res) => {
                 data.data().brakesWheelSuspension.frontBrakeType,
                 data.data().brakesWheelSuspension.frontSuspension,
                 data.data().brakesWheelSuspension.frontTyrePressureRP,
-                data.data().brakesWheelSuspension.frontTyrePresureR,
+                data.data().brakesWheelSuspension.frontTyrePressureR,
                 data.data().brakesWheelSuspension.frontTyreSize,
                 data.data().brakesWheelSuspension.frontWheelSize,
                 data.data().brakesWheelSuspension.radialTyres,

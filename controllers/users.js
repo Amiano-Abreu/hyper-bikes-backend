@@ -436,10 +436,18 @@ const getAllOrders = async (req, res) => {
 // verified
 const addReview = async (req, res) => {
     const { uid } = req.user;
+
+    const data = {
+        mileage: req.body.mileage,
+        owned: req.body.owned,
+        ridden: req.body.ridden,
+        used: req.body.used,
+    }
+
     const review = {
         bikeID: req.body.bikeID,
         body: req.body.body,
-        data: req.body.data,
+        data,
         rating: req.body.rating,
         title: req.body.title,
         userID: uid,
@@ -506,7 +514,7 @@ const addReview = async (req, res) => {
         } else {
             return res.status(403).json({
                         status: 'ERROR',
-                        message: 'Bike is already reviewed by you'
+                        message: 'Bike is already reviewed by you. You can edit your review in account section.'
                     });
                 
         }
@@ -522,11 +530,19 @@ const addReview = async (req, res) => {
 // verified
 const editReview = async (req, res) => {
     const { uid } = req.user;
+    
     const bikeID = req.body.bikeID;
     
+    const data = {
+        mileage: req.body.mileage,
+        owned: req.body.owned,
+        ridden: req.body.ridden,
+        used: req.body.used,
+    }
+
     const review = {
         body: req.body.body,
-        data: req.body.data,
+        data,
         rating: req.body.rating,
         title: req.body.title,
         edited: true

@@ -10,22 +10,20 @@ module.exports = yup.object({
                 .string('Body must be a string')
                 .required('Body is required')
                 .max(255, 'Body must be at most 255 characters'),
-        data: yup.object({
-                mileage: yup
-                            .number()
-                            .typeError('Mileage must be a number')
-                            .positive('Mileage must be a positive number')
-                            .required('Mileage is required'),
-                owned: yup
-                        .string('Owned must be a string')
-                        .required('Owned is required'),
-                ridden: yup
-                        .string('Ridden must be a string')
-                        .required('Ridden is required'),
-                used: yup
-                        .string('Used must be a string')
-                        .required('Used is required'),
-        }),
+        mileage: yup
+                    .number()
+                    .typeError('Mileage must be a number')
+                    .positive('Mileage must be a positive number')
+                    .required('Mileage is required'),
+        owned: yup
+                .string('Owned must be a string')
+                .required('Owned is required'),
+        ridden: yup
+                .string('Ridden must be a string')
+                .required('Ridden is required'),
+        used: yup
+                .string('Used must be a string')
+                .required('Used is required'),
         rating: yup
                 .number()
                 .typeError('Rating must be a number')

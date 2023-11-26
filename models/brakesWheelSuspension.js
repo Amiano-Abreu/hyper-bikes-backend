@@ -10,7 +10,7 @@ class BrakesWheelSuspension {
         this.frontBrakeType = frontBrakeType,
         this.frontSuspension = frontSuspension,
         this.frontTyrePressureRP = frontTyrePressureRP,
-        this.frontTyrePresureR = frontTyrePresureR,
+        this.frontTyrePressureR = frontTyrePresureR,
         this.frontTyreSize = frontTyreSize,
         this.frontWheelSize = frontWheelSize,
         this.radialTyres = radialTyres,
