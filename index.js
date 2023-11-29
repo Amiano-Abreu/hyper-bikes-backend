@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const path = require('path')
 
 const config = require('./config');
 
@@ -19,6 +20,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, ".", "public")))
 
 app.get('/api', (req, res) => {
     return res.status(200).json({
@@ -29,6 +31,11 @@ app.get('/api', (req, res) => {
 app.use('/api', newsRoute.routes);
 app.use('/api', bikesRoute.routes);
 app.use('/api', usersRoute.routes);
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, ".", "public", "index.html"))
+})
+
 app.use((req, res) => {
     return res.status(404).json({
         status: 'ERROR',

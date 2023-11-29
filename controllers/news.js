@@ -16,7 +16,7 @@ const getNews = async (req, res) => {
         const data = await news.get();
         const newsArray = [];
         if(data.empty) {
-            return res.status(404).json({
+            return res.status(200).json({
                 status: 'SUCCESS',
                 data: newsArray
             });
