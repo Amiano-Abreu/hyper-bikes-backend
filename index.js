@@ -1,7 +1,12 @@
+const path = require('path');
+// const https = require('https');
+// const fs = require('fs');
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const path = require('path')
+const helmet = require('helmet');
+const morgan = require('morgan');
 
 const config = require('./config');
 
@@ -11,12 +16,14 @@ const usersRoute = require('./routes/usersRoute');
 
 const app = express();
 
-const corsOptions = {
-    origin: 'http://localhost:3000',
-    credentials: true
-}
+// const corsOptions = {
+//     origin: 'http://localhost:3000',
+//     credentials: true
+// }
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(helmet());
+app.use(morgan('combined'))
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -25,14 +32,14 @@ app.use(express.static(path.join(__dirname, ".", "public")))
 app.get('/api', (req, res) => {
     return res.status(200).json({
         status: 'SUCCESS',
-        message: 'Server v2023.11.03 is ok !'
+        message: 'Server v2023.12.07 is ok !'
     })
 })
 app.use('/api', newsRoute.routes);
 app.use('/api', bikesRoute.routes);
 app.use('/api', usersRoute.routes);
 
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, ".", "public", "index.html"))
 })
 
@@ -43,4 +50,9 @@ app.use((req, res) => {
     })
 })
 
-app.listen(config.port , () => console.log(`App is listening on url ${config.url}`) );
+// https.createServer({
+//     key: fs.readFileSync('key.pem'),
+//     cert: fs.readFileSync('cert.pem')
+// }, app).listen(config.port , () => console.log(`App is listening on url ${config.url}`) );
+
+app.listen(config.port , () => console.log(`App is listening on url ${config.url}`) )

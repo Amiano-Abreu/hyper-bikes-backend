@@ -247,9 +247,9 @@ const createSession = async (req, res) => {
                         .signOut();
             
 
-            console.log('Create Session')
-            console.log('req.user ', req.user)
-            console.log('req.token idToken', req.token)
+            // console.log('Create Session')
+            // console.log('req.user ', req.user)
+            // console.log('req.token idToken', req.token)
             return res.status(200).json({
                 status: "SUCCESS",
                 user: req.user
@@ -286,12 +286,12 @@ const getUserDetails = async (req, res) => {
 const clearSession = async (req, res) => {
     const sessionCookie = req.cookies.session;
     try {
-        console.log('clearSession sesh ', sessionCookie)
+        // console.log('clearSession sesh ', sessionCookie)
         const userData = await admin
         .auth()
         .verifySessionCookie(sessionCookie, true);
         
-        console.log('clearSession user ', userData)
+        // console.log('clearSession user ', userData)
         
         await admin.auth().revokeRefreshTokens(userData.sub);
         

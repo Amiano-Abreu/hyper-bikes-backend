@@ -45,8 +45,8 @@ const verifySession = async (req, res, next) => {
                               .auth()
                               .verifySessionCookie(sessionCookie, true);
                               
-    console.log('verify session')
-    console.log('UserData of verify' ,userData);
+    // console.log('verify session')
+    // console.log('UserData of verify' ,userData);
     req.user = userData;
     return next();
   } catch (err) {
