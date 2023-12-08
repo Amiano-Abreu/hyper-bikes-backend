@@ -1,4 +1,4 @@
-const path = require('path');
+// const path = require('path');
 // const https = require('https');
 // const fs = require('fs');
 
@@ -16,32 +16,39 @@ const usersRoute = require('./routes/usersRoute');
 
 const app = express();
 
-// const corsOptions = {
-//     origin: 'http://localhost:3000',
-//     credentials: true
-// }
+const corsOptions = {
+    origin: config.origin,
+    credentials: true
+}
 
-// app.use(cors(corsOptions));
-app.use(helmet());
+app.use(cors(corsOptions));
+app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", 'https://firebasestorage.googleapis.com'],
+      },
+    },
+}));
 app.use(morgan('combined'))
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, ".", "public")))
+// app.use(express.static(path.join(__dirname, ".", "public")))
 
 app.get('/api', (req, res) => {
     return res.status(200).json({
         status: 'SUCCESS',
-        message: 'Server v2023.12.07 is ok !'
+        message: 'Server v2023.12.08 is ok !'
     })
 })
 app.use('/api', newsRoute.routes);
 app.use('/api', bikesRoute.routes);
 app.use('/api', usersRoute.routes);
 
-app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, ".", "public", "index.html"))
-})
+// app.get('/*', (req, res) => {
+//     res.sendFile(path.join(__dirname, ".", "public", "index.html"))
+// })
 
 app.use((req, res) => {
     return res.status(404).json({

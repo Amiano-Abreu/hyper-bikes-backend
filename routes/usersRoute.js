@@ -29,10 +29,10 @@ const addToCartSchema = require('../schema/addToCartSchema');
 const removeFromCartSchema = require('../schema/removeFromCartSchema');
 
 const validateSchema = require('../middleware/validateSchema');
-//const fbAuth = require('../middleware/fbAuth');
+
 const login = require('../middleware/login')
 const signUp = require('../middleware/signUp')
-const {verifySession} = require('../middleware/fbAuth');
+const verifySession = require('../middleware/verifySession');
 
 const router = express.Router();
 
