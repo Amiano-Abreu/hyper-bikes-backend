@@ -1,10 +1,10 @@
-// const path = require('path');
+const path = require('path');
 // const https = require('https');
 // const fs = require('fs');
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const cors = require('cors');
+// const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
@@ -16,12 +16,13 @@ const usersRoute = require('./routes/usersRoute');
 
 const app = express();
 
-const corsOptions = {
-    origin: config.origin,
-    credentials: true
-}
+// const corsOptions = {
+//     // origin: config.origin,
+//     origin: "localhost:5000",
+//     credentials: true
+// }
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(helmet({
     contentSecurityPolicy: {
       directives: {
@@ -34,7 +35,17 @@ app.use(morgan('combined'))
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.static(path.join(__dirname, ".", "public")))
+app.use("*/static", express.static(path.join(__dirname, "public", "static")))
+
+app.get('*/favicon.ico', (req, res) => {
+  res.type('image/x-icon');
+  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
+});
+
+app.get('*/manifest.json', (req, res) => {
+  res.type("json")
+  res.sendFile(path.join(__dirname, 'public', 'manifest.json'));
+});
 
 app.get('/api', (req, res) => {
     return res.status(200).json({
@@ -46,9 +57,9 @@ app.use('/api', newsRoute.routes);
 app.use('/api', bikesRoute.routes);
 app.use('/api', usersRoute.routes);
 
-// app.get('/*', (req, res) => {
-//     res.sendFile(path.join(__dirname, ".", "public", "index.html"))
-// })
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"))
+})
 
 app.use((req, res) => {
     return res.status(404).json({
