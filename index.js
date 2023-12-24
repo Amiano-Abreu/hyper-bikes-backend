@@ -26,7 +26,7 @@ const app = express();
 app.use(helmet({
     contentSecurityPolicy: {
       directives: {
-        // defaultSrc: ["'self'", "https://www.hyper-bikes.onrender.com/api"],
+        defaultSrc: ["'self'", "https://www.hyper-bikes.onrender.com/api"],
         imgSrc: ["'self'", 'https://firebasestorage.googleapis.com'],
       },
     },
