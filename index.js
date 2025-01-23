@@ -26,9 +26,9 @@ const app = express();
 app.use(helmet({
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'", "https://hyper-bikes.onrender.com/api"],
+        defaultSrc: ["'self'", "https://hyper-bikes-backend-git-main-amianos-projects.vercel.app/api"],
         imgSrc: ["'self'", 'https://firebasestorage.googleapis.com'],
-        connectSrc: ["'self'", "https://hyper-bikes.onrender.com/api"]
+        connectSrc: ["'self'", "https://hyper-bikes-backend-git-main-amianos-projects.vercel.app/api"]
       },
     },
 }));
