@@ -27,7 +27,7 @@ app.use(helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'", "https://hyper-bikes-backend-git-main-amianos-projects.vercel.app"],
-        imgSrc: ["'self'", 'https://firebasestorage.googleapis.com'],
+        imgSrc: ["'self'", 'https://firebasestorage.googleapis.com', "data:"],
         connectSrc: ["'self'", "https://hyper-bikes-backend-git-main-amianos-projects.vercel.app"]
       },
     },
